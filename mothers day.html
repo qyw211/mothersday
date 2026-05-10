@@ -1,0 +1,567 @@
+# 母亲节动态网页（完整单文件版）
+
+将下面代码保存为 `index.html`，双击即可打开。
+
+你只需要：
+
+* 替换照片
+* 替换名字
+* 替换文案
+* 上传到 Vercel
+
+即可让妈妈在手机上看到。
+
+---
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>母亲节快乐</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'ZCOOL XiaoWei', serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      background: linear-gradient(to bottom, #fff0f5, #ffe4e1);
+      color: #333;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .hero {
+      text-align: center;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      color: #ff4d6d;
+      animation: fadeIn 2s ease;
+    }
+
+    .hero p {
+      margin-top: 20px;
+      font-size: 1.3rem;
+      color: #666;
+      animation: fadeIn 4s ease;
+    }
+
+    .typing {
+      border-right: 3px solid #ff4d6d;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation:
+        typing 5s steps(30, end) forwards,
+        blink .8s infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .heart {
+      position: fixed;
+      color: rgba(255, 77, 109, 0.7);
+      animation: floatUp linear forwards;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-100vh) scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    .gallery-title {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      color: #ff4d6d;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 20px;
+      transition: all 0.5s ease;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05) rotate(1deg);
+    }
+
+    .timeline {
+      max-width: 900px;
+      width: 100%;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: #ff4d6d;
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      width: 50%;
+      padding: 20px 40px;
+      position: relative;
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+      text-align: right;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: 50%;
+    }
+
+    .timeline-content {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .timeline-content h3 {
+      color: #ff4d6d;
+      margin-bottom: 10px;
+    }
+
+    .ending {
+      text-align: center;
+      max-width: 800px;
+    }
+
+    .ending h2 {
+      font-size: 3rem;
+      color: #ff4d6d;
+      margin-bottom: 30px;
+    }
+
+    .ending p {
+      font-size: 1.3rem;
+      line-height: 2.2;
+      color: #555;
+    }
+
+    .glow {
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #ffb3c1;
+      }
+      to {
+        text-shadow: 0 0 25px #ff4d6d;
+      }
+    }
+
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-item {
+        width: 100%;
+        padding-left: 60px;
+        padding-right: 10px;
+      }
+
+      .timeline-item:nth-child(even),
+      .timeline-item:nth-child(odd) {
+        left: 0;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars"></canvas>
+
+  <button class="music-btn" onclick="toggleMusic()">🎵 音乐</button>
+
+  <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8d6d8c48d.mp3?filename=sweet-love-110397.mp3" type="audio/mpeg">
+  </audio>
+
+  <section class="hero">
+    <h1 class="glow">妈妈，母亲节快乐</h1>
+    <p class="typing">这是我专门为您做的网站 ❤️</p>
+  </section>
+
+  <section>
+    <h2 class="gallery-title">我们的回忆</h2>
+
+    <div class="gallery">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop" />
+
+      <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1200&auto=format&fit=crop" />
+
+      <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop" />
+
+      <img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=1200&auto=format&fit=crop" />
+    </div>
+  </section>
+
+  <section>
+    <h2 class="gallery-title">我们的故事</h2>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>2008</h3>
+          <p>您第一次牵着我的手送我上学。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>2014</h3>
+          <p>我生病的时候，您陪了我整整一夜。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>2020</h3>
+          <p>您总说：别太累，记得吃饭。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>2026</h3>
+          <p>这是我第一次为您做网页。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="ending">
+      <h2 class="glow">谢谢您</h2>
+
+      <p>
+        小时候总觉得时间很多。<br><br>
+
+        后来才发现，<br>
+        原来妈妈也会慢慢变老。<br><br>
+
+        谢谢您这些年的付出。<br>
+        谢谢您一直在我身后。<br><br>
+
+        愿岁月温柔待您。<br><br>
+
+        妈妈，母亲节快乐 ❤️
+      </p>
+    </div>
+  </section>
+
+  <script>
+
+    // 爱心特效
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.innerHTML = '❤';
+
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+      heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+
+    setInterval(createHeart, 300);
+
+
+    // 星空背景
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let stars = [];
+
+    for (let i = 0; i < 120; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2,
+        speed: Math.random() * 0.5
+      });
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = 'white';
+
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        star.y += star.speed;
+
+        if (star.y > canvas.height) {
+          star.y = 0;
+        }
+      });
+
+      requestAnimationFrame(drawStars);
+    }
+
+    drawStars();
+
+
+    // 音乐播放
+    const bgm = document.getElementById('bgm');
+
+    function toggleMusic() {
+      if (bgm.paused) {
+        bgm.play();
+      } else {
+        bgm.pause();
+      }
+    }
+
+    // 自动尝试播放
+    window.addEventListener('click', () => {
+      bgm.play();
+    }, { once: true });
+
+
+    // 点击烟花爱心
+    document.addEventListener('click', e => {
+      for (let i = 0; i < 12; i++) {
+        const heart = document.createElement('div');
+        heart.innerHTML = '💖';
+        heart.style.position = 'fixed';
+        heart.style.left = e.clientX + 'px';
+        heart.style.top = e.clientY + 'px';
+        heart.style.fontSize = '20px';
+        heart.style.pointerEvents = 'none';
+        heart.style.zIndex = 9999;
+
+        const x = (Math.random() - 0.5) * 200;
+        const y = (Math.random() - 0.5) * 200;
+
+        heart.animate([
+          {
+            transform: 'translate(0,0)',
+            opacity: 1
+          },
+          {
+            transform: `translate(${x}px, ${y}px)`,
+            opacity: 0
+          }
+        ], {
+          duration: 1000
+        });
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 1000);
+      }
+    });
+
+  </script>
+
+</body>
+</html>
+```
+
+<!-- -&#45;&#45;-->
+
+<!--# 如何替换自己的照片-->
+
+<!--找到：-->
+
+<!--```html-->
+<!--<img src="图片链接" />-->
+<!--```-->
+
+<!--替换成：-->
+
+<!--```html-->
+<!--<img src="images/mom1.jpg" />-->
+<!--```-->
+
+<!--然后创建：-->
+
+<!--```text-->
+<!--images/-->
+<!--```-->
+
+<!--把照片放进去即可。-->
+
+<!-- -&#45;&#45;-->
+
+<!--# 如何部署到手机可访问-->
+
+<!--## 第一步：注册 GitHub-->
+
+<!--官网：-->
+
+<!--[https://github.com](https://github.com)-->
+
+<!-- -&#45;&#45;-->
+
+<!--## 第二步：上传 index.html-->
+
+<!--创建仓库：-->
+
+<!--```text-->
+<!--mother-day-->
+<!--```-->
+
+<!--上传你的网页文件。-->
+
+<!-- -&#45;&#45;-->
+
+<!--## 第三步：部署到 Vercel-->
+
+<!--官网：-->
+
+<!--[https://vercel.com](https://vercel.com)-->
+
+<!--登录 GitHub 后：-->
+
+<!--* 导入项目-->
+<!--* 点击 Deploy-->
+
+<!--即可得到网址。-->
+
+<!--例如：-->
+
+<!--```text-->
+<!--https://mother-day.vercel.app-->
+<!--```-->
+
+<!--妈妈手机直接打开即可。-->
+
+<!-- -&#45;&#45;-->
+
+<!--# 进阶升级（推荐）-->
+
+<!--你还可以继续加：-->
+
+<!--* AI 语音-->
+<!--* 视频背景-->
+<!--* 花瓣飘落-->
+<!--* 3D 相册-->
+<!--* 自动播放回忆视频-->
+<!--* 登录动画-->
+<!--* WebGL 粒子特效-->
+<!--* Live2D-->
+<!--* Three.js 星空-->
+
+<!-- -&#45;&#45;-->
+
+<!--# 推荐替换内容-->
+
+<!--建议你把：-->
+
+<!--* 时间轴-->
+<!--* 文案-->
+<!--* 照片-->
+<!--* 音乐-->
+
+<!--全部换成真实内容。-->
+
+<!--这样杀伤力会非常大。-->
